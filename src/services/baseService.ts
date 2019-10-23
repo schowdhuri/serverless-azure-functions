@@ -107,7 +107,7 @@ export abstract class BaseService {
    */
   protected log(message: string, options?: ServerlessLogOptions, entity?: string) {
     (this.serverless.cli.log as any)(message, entity, options);
-  }  
+  }
 
   protected prettyPrint(object: any) {
     this.log(this.stringify(object));

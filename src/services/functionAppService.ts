@@ -204,6 +204,35 @@ export class FunctionAppService extends BaseService {
     });
   }
 
+  private async uploadStaticSite(): Promise<void> {
+    await this.blobService.initialize();
+    await this.blobService.createContainerIfNotExists("$web");
+    const getFileList = async () => {
+      return new Promise((resolve, reject) => {
+        glob("./build/**", {
+          dot: true,
+          nodir: true,
+          ignore: "./build/**/.DS_Store",
+        }, function (error, files) {
+          if(error)
+            return reject(error);
+          resolve(files);
+        });
+      });
+    };
+    const uploadFile = async (filePath) => {
+      const artifactName = filePath.replace("./build/", "");
+      await this.blobService.uploadFile(
+        filePath,
+        "$web",
+        artifactName,
+      );
+    };
+    const files = await getFileList();
+    const pArr = files.map(uploadFile);
+    await Promise.all(pArr);
+  }
+
   /**
    * create all necessary resources as defined in src/provider/armTemplates
    *    resource-group, storage account, app service plan, and app service at the minimum

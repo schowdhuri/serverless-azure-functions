@@ -18,7 +18,8 @@ describe("Storage Account Resource", () => {
       region: "westus",
       stage: "dev",
       resourceGroup,
-      runtime: "nodejs10.x"
+      runtime: "nodejs10.x",
+      storageAccountName: "storgacc"
     },
     service: "test-api"
   } as any;
@@ -153,9 +154,7 @@ describe("Storage Account Resource", () => {
   function assertValidStorageAccountName(config: ServerlessAzureConfig, value: string) {
     expect(value.length).toBeLessThanOrEqual(24);
     expect(value.match(/[a-z0-9]/g).length).toEqual(value.length);
-    expect(value).toContain(AzureNamingService.createShortAzureRegionName(config.provider.region));
-    expect(value).toContain(createSafeString(config.provider.prefix));
-    expect(value).toContain(createSafeString(config.provider.stage));
+    expect(value).toEqual(config.provider.storageAccountName);
   }
 
   function createSafeString(value: string) {

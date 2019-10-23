@@ -2,7 +2,7 @@ import semver from "semver";
 import Serverless from "serverless";
 import Service from "serverless/classes/Service";
 import configConstants from "../config";
-import { DeploymentConfig, FunctionRuntime, ServerlessAzureConfig, 
+import { DeploymentConfig, FunctionRuntime, ServerlessAzureConfig,
   ServerlessAzureFunctionConfig, SupportedRuntimeLanguage } from "../models/serverless";
 import { constants } from "../shared/constants";
 import { Guard } from "../shared/guard";
@@ -55,6 +55,13 @@ export class ConfigService {
    */
   public getResourceGroupName(): string {
     return this.config.provider.resourceGroup;
+  }
+
+  /**
+   * Name of Storage Account
+   */
+  public getStorageAccountName(): string {
+    return this.config.provider.storageAccountName;
   }
 
   /**
@@ -129,7 +136,7 @@ export class ConfigService {
     if (!providerRegion || providerRegion === awsRegion) {
       config.provider.region = this.serverless.service.provider["location"] || region;
     }
- 
+
     if (!config.provider.stage) {
       config.provider.stage = stage;
     }
@@ -236,7 +243,7 @@ export class ConfigService {
       "nodejs": SupportedRuntimeLanguage.NODE,
       "python": SupportedRuntimeLanguage.PYTHON
     }[languageInput];
-    
+
     return {
       language,
       version

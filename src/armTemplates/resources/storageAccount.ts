@@ -11,15 +11,7 @@ interface StorageAccountParams extends DefaultArmParams {
 
 export class StorageAccountResource implements ArmResourceTemplateGenerator {
   public static getResourceName(config: ServerlessAzureConfig) {
-    const options: AzureNamingServiceOptions = {
-      config,
-      resourceConfig: config.provider.storageAccount,
-      suffix: ""
-    };
-    return AzureNamingService.getSafeResourceName({
-      ...options,
-      maxLength: configConstants.naming.maxLength.storageAccount
-    });
+    return config.provider.storageAccountName;
   }
 
   public getTemplate(): ArmResourceTemplate {
@@ -52,7 +44,7 @@ export class StorageAccountResource implements ArmResourceTemplateGenerator {
           name: "[parameters('storageAccountName')]",
           type: "Microsoft.Storage/storageAccounts",
           location: "[parameters('location')]",
-          kind: "Storage",
+          kind: "StorageV2",
           properties: {
             accountType: "[parameters('storageAccountSkuName')]"
           },
