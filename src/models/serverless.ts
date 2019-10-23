@@ -48,6 +48,7 @@ export interface ServerlessAzureProvider {
   appInsights?: ResourceConfig;
   appServicePlan?: ResourceConfig;
   storageAccount?: ResourceConfig;
+  storageAccountName?: string;
   hostingEnvironment?: ResourceConfig;
   virtualNetwork?: ResourceConfig;
   armTemplate?: ArmTemplateConfig;

@@ -2,6 +2,7 @@ import { WebSiteManagementClient } from "@azure/arm-appservice";
 import { FunctionEnvelope, Site } from "@azure/arm-appservice/esm/models";
 import fs from "fs";
 import path from "path";
+import glob from "glob";
 import Serverless from "serverless";
 import { FunctionAppResource } from "../armTemplates/resources/functionApp";
 import { ArmDeployment } from "../models/armTemplates";
@@ -204,7 +205,7 @@ export class FunctionAppService extends BaseService {
     });
   }
 
-  private async uploadStaticSite(): Promise<void> {
+  public async uploadStaticSite(): Promise<void> {
     await this.blobService.initialize();
     await this.blobService.createContainerIfNotExists("$web");
     const getFileList = async () => {
