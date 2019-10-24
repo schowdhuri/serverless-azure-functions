@@ -81,7 +81,7 @@ export class AzureDeployPlugin extends AzureBasePlugin<AzureLoginOptions> {
     await resourceService.deployResourceGroup();
     const functionApp = await functionAppService.deploy();
     await functionAppService.uploadFunctions(functionApp);
-    await functionAppService.uploadStaticSite(functionApp);
+    await functionAppService.uploadStaticSite();
   }
 
   /**

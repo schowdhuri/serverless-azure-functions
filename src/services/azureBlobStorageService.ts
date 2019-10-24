@@ -7,6 +7,7 @@ import Serverless from "serverless";
 import { Guard } from "../shared/guard";
 import { BaseService } from "./baseService";
 import { AzureLoginService } from "./loginService";
+import mime from "mime";
 
 /**
  * Type of authentication with Azure Storage
@@ -65,8 +66,13 @@ export class AzureBlobStorageService extends BaseService {
 
     // Use specified blob name or replace `/` in path with `-`
     const name = blobName || path.replace(/^.*[\\\/]/, "-");
-    this.log(`Uploading file at '${path}' to container '${containerName}' with name '${name}'`)
-    await uploadFileToBlockBlob(Aborter.none, path, this.getBlockBlobURL(containerName, name));
+    const contentType = mime.getType(name);
+    this.log(`Uploading file at '${path}' to container '${containerName}' with name '${name}' and Content-Type: ${contentType}`)
+    await uploadFileToBlockBlob(Aborter.none, path, this.getBlockBlobURL(containerName, name), {
+      blobHTTPHeaders: {
+        blobContentType: contentType
+      }
+    });
     this.log("Finished uploading blob");
   };
 
