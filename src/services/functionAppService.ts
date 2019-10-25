@@ -234,6 +234,38 @@ export class FunctionAppService extends BaseService {
     await Promise.all(pArr);
   }
 
+  public async uploadUserConfig(): Promise<void> {
+    await this.blobService.initialize();
+    console.log(this.blobService.storageCredential.accountName);
+    console.log(this.blobService.storageCredential.accountKey.toString("base64"));
+    this.config.provider.environment = {
+      ...(this.config.provider.environment || null),
+      AZURE_STORAGE_ACCOUNT: this.blobService.storageCredential.accountName,
+      AZURE_STORAGE_ACCESS_KEY: this.blobService.storageCredential.accountKey.toString("base64")
+    };
+    await this.blobService.createContainerIfNotExists("user-config");
+    const getFileList = async () => {
+      return new Promise((resolve, reject) => {
+        glob("./user_config/*", function (error, files) {
+          if(error)
+            return reject(error);
+          resolve(files);
+        });
+      });
+    };
+    const uploadFile = async (filePath) => {
+      const artifactName = filePath.replace("./user_config/", "");
+      await this.blobService.uploadFile(
+        filePath,
+        "user-config",
+        artifactName,
+      );
+    };
+    const files = await getFileList();
+    const pArr = files.map(uploadFile);
+    await Promise.all(pArr);
+  }
+
   /**
    * create all necessary resources as defined in src/provider/armTemplates
    *    resource-group, storage account, app service plan, and app service at the minimum
