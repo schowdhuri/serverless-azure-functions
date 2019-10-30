@@ -236,8 +236,6 @@ export class FunctionAppService extends BaseService {
 
   public async uploadUserConfig(): Promise<void> {
     await this.blobService.initialize();
-    console.log(this.blobService.storageCredential.accountName);
-    console.log(this.blobService.storageCredential.accountKey.toString("base64"));
     this.config.provider.environment = {
       ...(this.config.provider.environment || null),
       AZURE_STORAGE_ACCOUNT: this.blobService.storageCredential.accountName,
@@ -246,7 +244,10 @@ export class FunctionAppService extends BaseService {
     await this.blobService.createContainerIfNotExists("user-config");
     const getFileList = async () => {
       return new Promise((resolve, reject) => {
-        glob("./user_config/*", function (error, files) {
+        glob("./user_config/**", {
+          nodir: true,
+          ignore: "./user_config/**/.DS_Store",
+        }, function (error, files) {
           if(error)
             return reject(error);
           resolve(files);
