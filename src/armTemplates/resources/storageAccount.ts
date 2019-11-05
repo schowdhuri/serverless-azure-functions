@@ -74,7 +74,6 @@ export class StorageAccountResource implements ArmResourceTemplateGenerator {
         value: resourceConfig.sku.tier,
       }
     };
-
     return params as unknown as ArmParameters;
   }
 }
