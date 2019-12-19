@@ -234,13 +234,17 @@ export class FunctionAppService extends BaseService {
     await Promise.all(pArr);
   }
 
-  public async uploadUserConfig(): Promise<void> {
+  public async addStorageKeysToEnv(): Promise<void> {
     await this.blobService.initialize();
     this.config.provider.environment = {
       ...(this.config.provider.environment || null),
       AZURE_STORAGE_ACCOUNT: this.blobService.storageCredential.accountName,
       AZURE_STORAGE_ACCESS_KEY: this.blobService.storageCredential.accountKey.toString("base64")
     };
+  }
+
+  public async uploadUserConfig(): Promise<void> {
+    await this.blobService.initialize();
     await this.blobService.createContainerIfNotExists("user-config");
     const getFileList = async () => {
       return new Promise((resolve, reject) => {
