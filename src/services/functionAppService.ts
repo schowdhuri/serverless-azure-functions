@@ -235,12 +235,16 @@ export class FunctionAppService extends BaseService {
   }
 
   public async addStorageKeysToEnv(): Promise<void> {
-    await this.blobService.initialize();
-    this.config.provider.environment = {
-      ...(this.config.provider.environment || null),
-      AZURE_STORAGE_ACCOUNT: this.blobService.storageCredential.accountName,
-      AZURE_STORAGE_ACCESS_KEY: this.blobService.storageCredential.accountKey.toString("base64")
-    };
+    try {
+      await this.blobService.initialize();
+      this.config.provider.environment = {
+        ...(this.config.provider.environment || null),
+        AZURE_STORAGE_ACCOUNT: this.blobService.storageCredential.accountName,
+        AZURE_STORAGE_ACCESS_KEY: this.blobService.storageCredential.accountKey.toString("base64")
+      };
+    } catch(ex0) {
+
+    }
   }
 
   public async uploadUserConfig(): Promise<void> {
