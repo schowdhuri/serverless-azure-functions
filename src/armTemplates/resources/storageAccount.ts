@@ -11,7 +11,7 @@ interface StorageAccountParams extends DefaultArmParams {
 
 export class StorageAccountResource implements ArmResourceTemplateGenerator {
   public static getResourceName(config: ServerlessAzureConfig) {
-    return config.provider.storageAccountName;
+    return `${config.provider.storageAccountName}`;
   }
 
   public getTemplate(): ArmResourceTemplate {

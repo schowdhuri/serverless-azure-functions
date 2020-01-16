@@ -15,14 +15,15 @@ interface FunctionAppParams extends DefaultArmParams {
 export class FunctionAppResource implements ArmResourceTemplateGenerator {
   public static getResourceName(config: ServerlessAzureConfig) {
     const safeServiceName = config.service.replace(/\s/g, "-");
-    const options: AzureNamingServiceOptions = {
-      config,
-      resourceConfig: config.provider.functionApp,
-      suffix: safeServiceName,
-      includeHash: false,
-    }
-
-    return AzureNamingService.getResourceName(options);
+    // const options: AzureNamingServiceOptions = {
+    //   config,
+    //   resourceConfig: config.provider.functionApp,
+    //   suffix: safeServiceName,
+    //   includeHash: false,
+    // }
+    //
+    // return AzureNamingService.getResourceName(options);
+    return `${safeServiceName}-app-${config.provider.stage}`;
   }
 
   public getTemplate(): ArmResourceTemplate {
